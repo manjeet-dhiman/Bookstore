@@ -44,10 +44,15 @@ def populate(book_list):
         ebookstore.close()
 
 
-def new_book(id, title, author, qty):
+def new_book():
     ebookstore = sqlite3.connect("data/ebookstore")
 
     cursor = ebookstore.cursor()
+
+    id = int(input("Enter a new id for the book: "))
+    title = input("Enter a title for the book: ")
+    author = input("Enter the author of the book: ")
+    qty = int(input("Enter a quantity for the book: "))
 
     cursor.execute("""INSERT INTO books(id, Title, Author, Qty)
                     VALUES(?,?,?,?)""", (id, title, author, qty))
@@ -57,10 +62,15 @@ def new_book(id, title, author, qty):
     ebookstore.close()
 
 
-def update_book(id, title, author, qty):
+def update_book():
     ebookstore = sqlite3.connect("data/ebookstore")
 
     cursor = ebookstore.cursor()
+
+    id = int(input("Enter the id for the book you wish to edit: "))
+    title = input("Enter the updated title of the book: ")
+    author = input("Enter the updated author of the book: ")
+    qty = int(input("Enter the updated quantity: "))
 
     cursor.execute("""UPDATE books SET Title=?, Author=?, Qty=? WHERE ID=?""", (id, title, author, qty))
 
@@ -71,10 +81,12 @@ def update_book(id, title, author, qty):
     return "Book updated successfully!"
 
 
-def delete_book(id):
+def delete_book():
     ebookstore = sqlite3.connect("data/ebookstore")
 
     cursor = ebookstore.cursor()
+
+    id = int(input("Enter the id for the book you wish to delete: "))
 
     cursor.execute('''DELETE FROM books WHERE id = ? ''', (id,))
 
@@ -85,20 +97,21 @@ def delete_book(id):
     return f"{id} deleted from database."
 
 
-def search_book(id):
+def search_book():
     ebookstore = sqlite3.connect("data/ebookstore")
 
     cursor = ebookstore.cursor()
 
+    id = int(input("Enter the id for the book you wish to search: "))
+
     cursor.execute('''SELECT Title, Author, Qty FROM books WHERE id=?''', (id,))
     book = cursor.fetchone()
-    
+
     print(f"""
     Title: {book[0]}
     Author: {book[1]}
     Qty: {book[2]}
     """)
-
 
     ebookstore.commit()
 
@@ -130,31 +143,19 @@ Please choose an option:
 : '''))
 
             if menu == 1:
-                id = int(input("Enter a new id for the book: "))
-                title = input("Enter a title for the book: ")
-                author = input("Enter the author of the book: ")
-                qty = int(input("Enter a quantity for the book: "))
-
-                new_book(id, title, author, qty)
+                new_book()
                 continue
 
             elif menu == 2:
-                id = int(input("Enter the id for the book you wish to edit: "))
-                title = input("Enter the updated title of the book: ")
-                author = input("Enter the updated author of the book: ")
-                qty = int(input("Enter the updated quantity: "))
-
-                update_book(id, title, author, qty)
+                update_book()
                 continue
 
             elif menu == 3:
-                id = int(input("Enter the id for the book you wish to delete: "))
-                delete_book(id)
+                delete_book()
                 continue
 
             elif menu == 4:
-                id = int(input("Enter the id for the book you wish to search: "))
-                search_book(id)
+                search_book()
                 continue
 
             elif menu == 0:
