@@ -129,7 +129,7 @@ def new_book():
 
     while True:
         try:
-            # ask user for the book quantity cast to an integer
+            # ask user for the book quantity, cast to an integer
             qty = int(input("Enter a quantity for the book: "))
             break
         except ValueError:
@@ -168,7 +168,15 @@ def update_book():
     id = int(input("Enter the id for the book you wish to edit: "))
     title = input("Enter the updated title of the book: ")
     author = input("Enter the updated author of the book: ")
-    qty = int(input("Enter the updated quantity: "))
+    while True:
+
+        try:
+            # ask user for the book quantity, cast to an integer
+            qty = int(input("Enter the updated quantity: "))
+            break
+        except ValueError:
+            # display an error message if the input is not an integer
+            print("Please enter an integer for qty.")
 
     cursor.execute("""UPDATE books SET Title=?, Author=?, Qty=? WHERE ID=?""", (id, title, author, qty))
 
