@@ -185,6 +185,13 @@ def search_book():
 
 
 def main():
+    """Main function of the Bookstore program.
+
+    This function performs the following operations:
+    - Creates a table for storing book information.
+    - Populates the table with a list of books.
+    - Presents a menu to the user for performing various actions with the books.
+    """
     create_table()
 
     book_list = [(3001, "A Tale of Two Cities", "Charles Dickens", 30),
