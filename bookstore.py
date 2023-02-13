@@ -15,12 +15,14 @@ def create_table():
     Finally, the database connection will be closed.
     """
 
+    # connect to the 'ebookstore' database
     ebookstore = sqlite3.connect("data/ebookstore")
 
+    # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
+
     try:
         # creates a file called ebookstore with a SQLite3 DB
-
         cursor.execute("""CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY, Title TEXT, Author TEXT, Qty INTEGER)
         """)
 
@@ -75,24 +77,64 @@ def populate(book_list):
 def new_book():
     """Add a new book to the 'books' table in the SQLite database 'ebookstore'
 
-    Connects to the 'ebookstore' database and prompts the user to input the following information for a new book:
-        'id' as INTEGER,
-        'Title' as TEXT,
-        'Author' as TEXT,
-        'Qty' as INTEGER.
+        This function connects to the 'ebookstore' database, creates a cursor, asks for the following input:
+        id as a 4-digit integer
+        title as a string
+        author as a string
+        qty as an integer
+
+    If the user input for id is not a 4-digit integer, an error message will be displayed.
+    If the id is already present in the database, the user will be prompted to enter a different id.
+
+    If the user input for qty is not an integer, the user will be prompted to enter a valid integer.
 
     The inputted information is then inserted into the 'books' table as a new row.
     Finally, the database connection will be closed.
+
+    Returns:
+        str: A string indicating the book was successfully added displaying the title and author.
     """
 
     ebookstore = sqlite3.connect("data/ebookstore")
 
     cursor = ebookstore.cursor()
 
-    id = int(input("Enter a new id for the book: "))
+    while True:
+        try:
+            id = int(input("Enter a new 4-digit id for the book: "))
+            # check if the length of the inputted ID is equal to 4
+            if len(str(id)) != 4:
+                # raise a ValueError if the length is not equal to 4
+                raise ValueError
+
+            # check database if id already exists
+            cursor.execute("SELECT * FROM books WHERE id=?", (id,))
+            result = cursor.fetchone()
+
+            if result:
+                # display an error message if the ID is already present in the database
+                print("This id already exists. Please enter a different id.")
+            else:
+                break
+
+            # break out of the loop if the input is valid
+            break
+
+        except ValueError:
+            # display an error message if the input is not a 4-digit integer
+            print("The id must be a 4-digit integer. Please try again.")
+
     title = input("Enter a title for the book: ")
     author = input("Enter the author of the book: ")
-    qty = int(input("Enter a quantity for the book: "))
+
+    while True:
+        try:
+            # ask user for the book quantity cast to an integer
+            qty = int(input("Enter a quantity for the book: "))
+            break
+        except ValueError:
+            # display an error message if the input is not an integer
+            print("Please enter an integer for qty.")
 
     cursor.execute("""INSERT INTO books(id, Title, Author, Qty)
                     VALUES(?,?,?,?)""", (id, title, author, qty))
@@ -101,7 +143,7 @@ def new_book():
 
     ebookstore.close()
 
-    return f"{title} by {author} successfully added!"
+    return print(f"{title} by {author} successfully added!")
 
 
 def update_book():
