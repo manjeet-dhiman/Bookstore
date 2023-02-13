@@ -92,7 +92,13 @@ def search_book(id):
 
     cursor.execute('''SELECT Title, Author, Qty FROM books WHERE id=?''', (id,))
     book = cursor.fetchone()
-    print(book)
+    
+    print(f"""
+    Title: {book[0]}
+    Author: {book[1]}
+    Qty: {book[2]}
+    """)
+
 
     ebookstore.commit()
 
@@ -163,6 +169,6 @@ Please choose an option:
             print("You have entered an invalid choice. Please try again.")
 
 
-# call the main menu
+# call the program
 if __name__ == "__main__":
     main()
