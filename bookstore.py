@@ -107,6 +107,7 @@ def check_id():
             else:
                 # display an error message if the ID is already present in the database
                 print("This id doesn't exist. Please enter a different id.")
+                continue
 
         except ValueError:
             # display an error message if the input is not a 4-digit integer
@@ -115,6 +116,27 @@ def check_id():
     ebookstore.close()
 
     return id
+
+
+def new_qty():
+    """This function prompts the user to enter a quantity for a book.
+
+    Returns:
+    int: the updated quantity for the book.
+
+    Raises:
+    ValueError: if the input provided by the user is not an integer.
+    """
+    while True:
+        try:
+            # ask user for the book quantity, cast to an integer
+            qty = int(input("Enter the updated quantity: "))
+            break
+        except ValueError:
+            # display an error message if the input is not an integer
+            print("Please enter an integer for qty.")
+
+    return qty
 
 
 def new_book():
@@ -157,11 +179,9 @@ def new_book():
             if result:
                 # display an error message if the ID is already present in the database
                 print("This id already exists. Please enter a different id.")
+                continue
             else:
                 break
-
-            # break out of the loop if the input is valid
-            break
 
         except ValueError:
             # display an error message if the input is not a 4-digit integer
@@ -170,14 +190,7 @@ def new_book():
     title = input("Enter a title for the book: ")
     author = input("Enter the author of the book: ")
 
-    while True:
-        try:
-            # ask user for the book quantity, cast to an integer
-            qty = int(input("Enter a quantity for the book: "))
-            break
-        except ValueError:
-            # display an error message if the input is not an integer
-            print("Please enter an integer for qty.")
+    qty = new_qty()
 
     cursor.execute("""INSERT INTO books(id, Title, Author, Qty)
                     VALUES(?,?,?,?)""", (id, title, author, qty))
@@ -213,14 +226,7 @@ def update_book():
     title = input("Enter the updated title of the book: ")
     author = input("Enter the updated author of the book: ")
 
-    while True:
-        try:
-            # ask user for the book quantity, cast to an integer
-            qty = int(input("Enter the updated quantity: "))
-            break
-        except ValueError:
-            # display an error message if the input is not an integer
-            print("Please enter an integer for qty.")
+    qty = new_qty()
 
     cursor.execute("""UPDATE books SET Title=?, Author=?, Qty=? WHERE ID=?""", (title, author, qty, id))
 
