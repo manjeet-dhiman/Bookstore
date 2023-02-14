@@ -75,6 +75,17 @@ def populate(book_list):
 
 
 def check_id():
+    """Function to check if a book ID exists in the database.
+
+    This function prompts the user to enter a 4-digit id for a book, and then verifies if the id exists in the database.
+
+    Returns:
+    int: Returns the 4-digit id entered by the user, if it exists in the database.
+
+    Raises:
+    ValueError: Raised when the input is not a 4-digit integer.
+    """
+
     ebookstore = sqlite3.connect("data/ebookstore")
 
     cursor = ebookstore.cursor()
@@ -211,7 +222,7 @@ def update_book():
             # display an error message if the input is not an integer
             print("Please enter an integer for qty.")
 
-    cursor.execute("""UPDATE books SET Title=?, Author=?, Qty=? WHERE ID=?""", (id, title, author, qty))
+    cursor.execute("""UPDATE books SET Title=?, Author=?, Qty=? WHERE ID=?""", (title, author, qty, id))
 
     ebookstore.commit()
 
