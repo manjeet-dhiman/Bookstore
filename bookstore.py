@@ -131,7 +131,14 @@ def new_qty():
         try:
             # ask user for the book quantity, cast to an integer
             qty = int(input("Enter the updated quantity: "))
-            break
+
+            # allow only a positive quantity
+            if qty < 0:
+                print("Please type a positive integer (minimum 0)")
+                continue
+            else:
+                break
+
         except ValueError:
             # display an error message if the input is not an integer
             print("Please enter an integer for qty.")
