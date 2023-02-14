@@ -168,8 +168,8 @@ def update_book():
     id = int(input("Enter the id for the book you wish to edit: "))
     title = input("Enter the updated title of the book: ")
     author = input("Enter the updated author of the book: ")
-    while True:
 
+    while True:
         try:
             # ask user for the book quantity, cast to an integer
             qty = int(input("Enter the updated quantity: "))
@@ -252,45 +252,41 @@ def main():
                  ]
 
     populate(book_list)
-
+    
     while True:
-        try:
-            menu = int(input('''
-Bookstore
-Please choose an option:
-1. Enter book
-2. Update book
-3. Delete book
-4. Search books
-0. Exit
-: '''))
+        menu = input('''
+    Bookstore
+    Please choose an option:
+    1. Enter book
+    2. Update book
+    3. Delete book
+    4. Search books
+    0. Exit
+    : ''')
 
-            if menu == 1:
-                new_book()
-                continue
+        if menu == '1':
+            new_book()
+            continue
 
-            elif menu == 2:
-                update_book()
-                continue
+        elif menu == '2':
+            update_book()
+            continue
 
-            elif menu == 3:
-                delete_book()
-                continue
+        elif menu == '3':
+            delete_book()
+            continue
 
-            elif menu == 4:
-                search_book()
-                continue
+        elif menu == '4':
+            search_book()
+            continue
 
-            elif menu == 0:
-                print("Closing Bookstore program.")
-                exit()
+        elif menu == '0':
+            print("Closing Bookstore program.")
+            exit()
 
-            else:
-                print("You have entered an invalid choice. Please try again.")
-                continue
-
-        except ValueError:
+        else:
             print("You have entered an invalid choice. Please try again.")
+            continue
 
 
 # call the program
