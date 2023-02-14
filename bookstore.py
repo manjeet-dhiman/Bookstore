@@ -74,6 +74,38 @@ def populate(book_list):
         ebookstore.close()
 
 
+def check_id():
+    ebookstore = sqlite3.connect("data/ebookstore")
+
+    cursor = ebookstore.cursor()
+
+    while True:
+        try:
+            id = int(input("Enter a 4-digit id for the book: "))
+            # check if the length of the inputted ID is equal to 4
+            if len(str(id)) != 4:
+                # raise a ValueError if the length is not equal to 4
+                raise ValueError
+
+            # check database if id already exists
+            cursor.execute("SELECT * FROM books WHERE id=?", (id,))
+            result = cursor.fetchone()
+
+            if result:
+                break
+            else:
+                # display an error message if the ID is already present in the database
+                print("This id doesn't exist. Please enter a different id.")
+
+        except ValueError:
+            # display an error message if the input is not a 4-digit integer
+            print("The id must be a 4-digit integer. Please try again.")
+
+    ebookstore.close()
+
+    return id
+
+
 def new_book():
     """Add a new book to the 'books' table in the SQLite database 'ebookstore'
 
@@ -165,7 +197,8 @@ def update_book():
 
     cursor = ebookstore.cursor()
 
-    id = int(input("Enter the id for the book you wish to edit: "))
+    id = check_id()
+
     title = input("Enter the updated title of the book: ")
     author = input("Enter the updated author of the book: ")
 
@@ -203,7 +236,7 @@ def delete_book():
 
     cursor = ebookstore.cursor()
 
-    id = int(input("Enter the id for the book you wish to delete: "))
+    id = check_id()
 
     cursor.execute('''DELETE FROM books WHERE id = ? ''', (id,))
 
@@ -224,7 +257,7 @@ def search_book():
 
     cursor = ebookstore.cursor()
 
-    id = int(input("Enter the id for the book you wish to search: "))
+    id = check_id()
 
     cursor.execute('''SELECT Title, Author, Qty FROM books WHERE id=?''', (id,))
     book = cursor.fetchone()
@@ -252,7 +285,7 @@ def main():
                  ]
 
     populate(book_list)
-    
+
     while True:
         menu = input('''
     Bookstore
