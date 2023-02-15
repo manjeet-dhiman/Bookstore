@@ -3,7 +3,7 @@ This program implements a bookstore clerk system using Python and SQLite. The pr
 1. Add new books to the database
 2. Update book information
 3. Delete books from the database
-4. Search the database to find a specific book.
+4. Search the database using an id to find a specific book.
 
 The program connects to an SQLite database called `ebookstore` and creates a table called `books` with the structure:
 - id: integer, primary key
@@ -24,6 +24,15 @@ The program implements the database operations using the `sqlite3` module.
 
 import sqlite3
 
+# for colour text in terminal output using ANSI code for clear responses
+RED = "\033[91m"
+GREEN = "\033[32m"
+PURPLE = '\033[95m'
+# resets colour to default
+RESET = "\033[0m"
+# create line separators for decoration
+SEP = "⎯"
+
 
 def create_table():
     """Create a table named 'books' in the SQLite database 'ebookstore'
@@ -35,7 +44,6 @@ def create_table():
         'Qty' as INTEGER.
 
     The function connects to the 'ebookstore' database and creates the 'books' table if it does not already exist.
-    In case of any exceptions, the changes will be rolled back and the exception will be raised.
     Finally, the database connection will be closed.
     """
 
@@ -45,37 +53,29 @@ def create_table():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
-    try:
-        # creates a file called ebookstore with a SQLite3 DB
-        cursor.execute("""CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY, Title TEXT, Author TEXT, Qty INTEGER)
-        """)
+    # creates a table called books, if it doesn't already exist, with a SQLite format
+    cursor.execute("""CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY, Title TEXT, Author TEXT, Qty INTEGER)
+    """)
 
-        ebookstore.commit()
+    # commit changes to the database
+    ebookstore.commit()
 
-    # catch any exception
-    except Exception as e:
-        # Roll back any change if something goes wrong
-        ebookstore.rollback()
-        raise e
-
-    finally:
-        # close the database connection
-        ebookstore.close()
+    # close the database connection
+    ebookstore.close()
 
 
 def populate(book_list):
     """Populate the 'books' table in the SQLite database 'ebookstore' with data from 'book_list'
 
     Args:
-        book_list ([int, str, str, int],): A list of book tuples where each tuple contains:
+        book_list: A list of book tuples where each tuple contains:
             'id' as INTEGER,
             'Title' as TEXT,
             'Author' as TEXT,
             'Qty' as INTEGER.
 
     The function connects to the 'ebookstore' database and inserts the data from 'book_list' into the 'books' table.
-    In case of an IntegrityError, which is raised when the data is already in the table,
-    the error message "Data already exists in the table." will be printed.
+    In case of an IntegrityError, whereby the data is already in the table, any changes will be rolled back.
     Finally, the database connection will be closed.
     """
 
@@ -86,14 +86,14 @@ def populate(book_list):
     cursor = ebookstore.cursor()
 
     try:
+        # insert information into table
         for book in book_list:
             cursor.execute("""INSERT INTO books VALUES (?,?,?,?)""", book)
         # commit changes to books database
         ebookstore.commit()
 
-    # catch exception when information entered is already in the table, an IntegrityError
+    # catch exception when information entered is already in the table, an IntegrityError and rollback any changes
     except sqlite3.IntegrityError:
-        print("Data already exists in the table.")
         ebookstore.rollback()
 
     finally:
@@ -121,7 +121,7 @@ def check_id():
 
     while True:
         try:
-            id = int(input("Enter a 4-digit id for the book: "))
+            id = int(input("\nEnter a 4-digit id for the book: "))
             # check if the length of the inputted ID is equal to 4
             if len(str(id)) != 4:
                 # raise a ValueError if the length is not equal to 4
@@ -134,13 +134,13 @@ def check_id():
             if result:
                 break
             else:
-                # display an error message if the ID is already present in the database
-                print("This id doesn't exist. Please enter a different id.")
+                # display an error message if the ID doesn't exist in the database
+                print(f"{RED}This id doesn't exist. Please enter a different id.{RESET}")
                 continue
 
         except ValueError:
             # display an error message if the input is not a 4-digit integer
-            print("The id must be a 4-digit integer. Please try again.")
+            print(f"{RED}The id must be a 4-digit integer. Please try again.{RESET}")
 
     # close the database connection
     ebookstore.close()
@@ -164,14 +164,14 @@ def new_qty():
 
             # allow only a positive quantity
             if qty < 0:
-                print("Please type a positive integer (minimum 0)")
+                print(f"{RED}Please type a positive integer (minimum 0){RESET}")
                 continue
             else:
                 break
 
         except ValueError:
             # display an error message if the input is not an integer
-            print("Please enter an integer for qty.")
+            print(f"{RED}Please enter an integer for qty.{RESET}")
 
     return qty
 
@@ -194,7 +194,7 @@ def new_book():
     Finally, the database connection will be closed.
 
     Returns:
-        str: A string indicating the book was successfully added displaying the title and author.
+        str: A string indicating the book was successfully added displaying record details.
     """
 
     # connect to the 'ebookstore' database
@@ -208,7 +208,7 @@ def new_book():
             id = int(input("Enter a new 4-digit id for the book: "))
             # check if the length of the inputted ID is equal to 4
             if len(str(id)) != 4:
-                # raise a ValueError if the length is not equal to 4
+                # raise a ValueError message if the length is not equal to 4
                 raise ValueError
 
             # check database if id already exists
@@ -217,20 +217,23 @@ def new_book():
 
             if result:
                 # display an error message if the ID is already present in the database
-                print("This id already exists. Please enter a different id.")
+                print(f"{RED}This id already exists. Please enter a different id.{RESET}")
                 continue
             else:
+                # if id has no conflicts break the loop
                 break
 
         except ValueError:
             # display an error message if the input is not a 4-digit integer
-            print("The id must be a 4-digit integer. Please try again.")
+            print(f"{RED}The id must be a 4-digit integer. Please try again.{RESET}")
 
     title = input("Enter a title for the book: ")
     author = input("Enter the author of the book: ")
 
+    # call function to create a qty value
     qty = new_qty()
 
+    # add user input into table
     cursor.execute("""INSERT INTO books(id, Title, Author, Qty)
                     VALUES(?,?,?,?)""", (id, title, author, qty))
 
@@ -240,7 +243,14 @@ def new_book():
     # close the database connection
     ebookstore.close()
 
-    return print(f"{title} by {author} successfully added!")
+    # display results to user
+    output = f"\n{PURPLE}{SEP * 10} [New Book Record] {SEP * 10}{RESET}\n"
+    output += f"ID:\t{id}\n"
+    output += f"Title:\t{title}\n"
+    output += f"Author:\t{author}\n"
+    output += f"Qty:\t{qty}\n"
+
+    return print(output)
 
 
 def update_book():
@@ -255,7 +265,7 @@ def update_book():
     Finally, the database connection will be closed.
 
     Returns:
-        str: A string indicating the id of the book was successfully updated.
+        str: A string indicating the id of the book was successfully updated showing the changes.
     """
 
     # connect to the 'ebookstore' database
@@ -264,13 +274,16 @@ def update_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
+    # call check_id function
     id = check_id()
 
     title = input("Enter the updated title of the book: ")
     author = input("Enter the updated author of the book: ")
 
+    # call function to to create a qty value
     qty = new_qty()
 
+    # replace information with new user inputs
     cursor.execute("""UPDATE books SET Title=?, Author=?, Qty=? WHERE ID=?""", (title, author, qty, id))
 
     # commit changes to books database
@@ -279,7 +292,14 @@ def update_book():
     # close the database connection
     ebookstore.close()
 
-    return "Book updated successfully!"
+    # display new book record to user
+    output = f"\n{PURPLE}{SEP * 10} [Updated Book Information] {SEP * 10}{RESET}\n"
+    output += f"ID:\t{id}\n"
+    output += f"Title:\t{title}\n"
+    output += f"Author:\t{author}\n"
+    output += f"Qty:\t{qty}\n"
+
+    return print(output)
 
 
 def delete_book():
@@ -310,7 +330,7 @@ def delete_book():
     # close the database connection
     ebookstore.close()
 
-    return f"{id} record deleted from database."
+    return print(f"\n{GREEN}{id} record deleted from database.{RESET}\n")
 
 
 def search_book():
@@ -326,15 +346,23 @@ def search_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
+    # call function to generate a valid id
     id = check_id()
 
+    # fetch the record with the corresponding id
     cursor.execute('''SELECT Title, Author, Qty FROM books WHERE id=?''', (id,))
     book = cursor.fetchone()
 
     # close the database connection
     ebookstore.close()
 
-    return print(f"Title:\t{book[0]}\nAuthor:\t{book[1]}\nQty:\t{book[2]}")
+    # display record to the user
+    output = f"\n{PURPLE}{SEP * 10} [ID : {id}] {SEP * 10}{RESET}\n"
+    output += f"Title:\t{book[0]}\n"
+    output += f"Author:\t{book[1]}\n"
+    output += f"Qty:\t{book[2]}\n"
+
+    return print(output)
 
 
 def main():
@@ -359,15 +387,16 @@ def main():
     populate(book_list)
 
     while True:
-        menu = input('''
-    Bookstore
-    Please choose an option:
-    1. Enter book
-    2. Update book
-    3. Delete book
-    4. Search books
-    0. Exit
-    : ''')
+        menu = input(f'''
+{PURPLE}{SEP * 10} [Bookstore] {SEP * 10}{RESET}
+Please choose an option:
+
+1. Enter book
+2. Update book
+3. Delete book
+4. Search books
+0. Exit
+: ''')
 
         if menu == '1':
             new_book()
@@ -386,11 +415,11 @@ def main():
             continue
 
         elif menu == '0':
-            print("Closing Bookstore program.")
+            print(f"{GREEN}Closing Bookstore program.{RESET}")
             exit()
 
         else:
-            print("You have entered an invalid choice. Please try again.")
+            print(f"{RED}You have entered an invalid choice. Please try again.{RESET}")
             continue
 
 
