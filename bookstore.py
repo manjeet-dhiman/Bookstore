@@ -1,3 +1,27 @@
+"""
+This program implements a bookstore clerk system using Python and SQLite. The program allows the clerk to:
+1. Add new books to the database
+2. Update book information
+3. Delete books from the database
+4. Search the database to find a specific book.
+
+The program connects to an SQLite database called `ebookstore` and creates a table called `books` with the structure:
+- id: integer, primary key
+- title: text, book title
+- author: text, book author
+- qty: integer, quantity of the book in stock
+
+The program presents the user with a menu of options, and performs the corresponding action based on the user's input.
+The menu options include:
+1. Enter book
+2. Update book
+3. Delete book
+4. Search books
+0. Exit
+
+The program implements the database operations using the `sqlite3` module.
+"""
+
 import sqlite3
 
 
@@ -35,7 +59,7 @@ def create_table():
         raise e
 
     finally:
-        # close the db connection
+        # close the database connection
         ebookstore.close()
 
 
@@ -55,14 +79,16 @@ def populate(book_list):
     Finally, the database connection will be closed.
     """
 
+    # connect to the 'ebookstore' database
     ebookstore = sqlite3.connect("data/ebookstore")
 
+    # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
     try:
         for book in book_list:
             cursor.execute("""INSERT INTO books VALUES (?,?,?,?)""", book)
-
+        # commit changes to books database
         ebookstore.commit()
 
     # catch exception when information entered is already in the table, an IntegrityError
@@ -71,6 +97,7 @@ def populate(book_list):
         ebookstore.rollback()
 
     finally:
+        # close the database connection
         ebookstore.close()
 
 
@@ -86,8 +113,10 @@ def check_id():
     ValueError: Raised when the input is not a 4-digit integer.
     """
 
+    # connect to the 'ebookstore' database
     ebookstore = sqlite3.connect("data/ebookstore")
 
+    # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
     while True:
@@ -113,6 +142,7 @@ def check_id():
             # display an error message if the input is not a 4-digit integer
             print("The id must be a 4-digit integer. Please try again.")
 
+    # close the database connection
     ebookstore.close()
 
     return id
@@ -167,8 +197,10 @@ def new_book():
         str: A string indicating the book was successfully added displaying the title and author.
     """
 
+    # connect to the 'ebookstore' database
     ebookstore = sqlite3.connect("data/ebookstore")
 
+    # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
     while True:
@@ -202,8 +234,10 @@ def new_book():
     cursor.execute("""INSERT INTO books(id, Title, Author, Qty)
                     VALUES(?,?,?,?)""", (id, title, author, qty))
 
+    # commit changes to books database
     ebookstore.commit()
 
+    # close the database connection
     ebookstore.close()
 
     return print(f"{title} by {author} successfully added!")
@@ -224,8 +258,10 @@ def update_book():
         str: A string indicating the id of the book was successfully updated.
     """
 
+    # connect to the 'ebookstore' database
     ebookstore = sqlite3.connect("data/ebookstore")
 
+    # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
     id = check_id()
@@ -237,8 +273,10 @@ def update_book():
 
     cursor.execute("""UPDATE books SET Title=?, Author=?, Qty=? WHERE ID=?""", (title, author, qty, id))
 
+    # commit changes to books database
     ebookstore.commit()
 
+    # close the database connection
     ebookstore.close()
 
     return "Book updated successfully!"
@@ -256,19 +294,23 @@ def delete_book():
         str: A string indicating the id of the book that was deleted from the database.
     """
 
+    # connect to the 'ebookstore' database
     ebookstore = sqlite3.connect("data/ebookstore")
 
+    # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
     id = check_id()
 
     cursor.execute('''DELETE FROM books WHERE id = ? ''', (id,))
 
+    # commit changes to books database
     ebookstore.commit()
 
+    # close the database connection
     ebookstore.close()
 
-    return f"{id} deleted from database."
+    return f"{id} record deleted from database."
 
 
 def search_book():
@@ -277,8 +319,11 @@ def search_book():
     Returns:
         str: A string with the book's title, author, and quantity
     """
+
+    # connect to the 'ebookstore' database
     ebookstore = sqlite3.connect("data/ebookstore")
 
+    # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
     id = check_id()
@@ -286,6 +331,7 @@ def search_book():
     cursor.execute('''SELECT Title, Author, Qty FROM books WHERE id=?''', (id,))
     book = cursor.fetchone()
 
+    # close the database connection
     ebookstore.close()
 
     return print(f"Title:\t{book[0]}\nAuthor:\t{book[1]}\nQty:\t{book[2]}")
@@ -299,6 +345,7 @@ def main():
     - Populates the table with a list of books.
     - Presents a menu to the user for performing various actions with the books.
     """
+    # call function to create empty table
     create_table()
 
     book_list = [(3001, "A Tale of Two Cities", "Charles Dickens", 30),
@@ -308,6 +355,7 @@ def main():
                  (3005, "Alice in Wonderland", "Lewis Carroll", 12),
                  ]
 
+    # call function to fill table with information from book_list
     populate(book_list)
 
     while True:
