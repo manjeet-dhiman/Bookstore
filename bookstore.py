@@ -203,7 +203,7 @@ def new_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
-    print(f"\n{PURPLE}{SEP * 10} [New Book Record] {SEP * 10}{RESET}\n")
+    print(f"\n{PURPLE}{SEP * 10} [Add New Book] {SEP * 10}{RESET}\n")
     while True:
         try:
             id = int(input("Enter a new 4-digit id for the book: "))
@@ -251,7 +251,7 @@ def new_book():
     output += f"Author:\t{author}\n"
     output += f"Qty:\t{qty}\n"
 
-    return print(output)
+    print(output)
 
 
 def update_book():
@@ -275,7 +275,7 @@ def update_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
-    print(f"\n{PURPLE}{SEP * 10} [Update Book Record] {SEP * 10}{RESET}\n")
+    print(f"\n{PURPLE}{SEP * 10} [Update Book Record] {SEP * 10}{RESET}")
 
     # call check_id function
     id = check_id()
@@ -297,12 +297,12 @@ def update_book():
 
     # display new book record to user
     output = f"\n{PURPLE}{SEP * 10} [Updated Book Information] {SEP * 10}{RESET}\n"
-    output += f"ID:\t{id}\n"
+    output += f"ID:\t\t{id}\n"
     output += f"Title:\t{title}\n"
     output += f"Author:\t{author}\n"
     output += f"Qty:\t{qty}\n"
 
-    return print(output)
+    print(output)
 
 
 def delete_book():
@@ -323,7 +323,7 @@ def delete_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
-    print(f"\n{PURPLE}{SEP * 10} [Delete Book Record] {SEP * 10}{RESET}\n")
+    print(f"\n{PURPLE}{SEP * 10} [Delete Book Record] {SEP * 10}{RESET}")
 
     id = check_id()
 
@@ -335,7 +335,7 @@ def delete_book():
     # close the database connection
     ebookstore.close()
 
-    return print(f"\n{GREEN}{id} record deleted from database.{RESET}\n")
+    print(f"\n{GREEN}Record {id} deleted from database.{RESET}\n")
 
 
 def search_book():
@@ -351,7 +351,7 @@ def search_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
-    print(f"\n{PURPLE}{SEP * 10} [Search Book Record] {SEP * 10}{RESET}\n")
+    print(f"\n{PURPLE}{SEP * 10} [Search Book Record] {SEP * 10}{RESET}")
 
     # call function to generate a valid id
     id = check_id()
@@ -364,12 +364,12 @@ def search_book():
     ebookstore.close()
 
     # display record to the user
-    output = f"\n{PURPLE}{SEP * 10} [ID : {id}] {SEP * 10}{RESET}\n"
+    output = f"\n{PURPLE}{SEP * 10} [ID: {id}] {SEP * 10}{RESET}\n"
     output += f"Title:\t{book[0]}\n"
     output += f"Author:\t{book[1]}\n"
     output += f"Qty:\t{book[2]}\n"
 
-    return print(output)
+    print(output)
 
 
 def main():
