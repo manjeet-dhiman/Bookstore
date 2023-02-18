@@ -92,7 +92,7 @@ def populate(book_list):
         # commit changes to books database
         ebookstore.commit()
 
-    # catch exception when information entered is already in the table, an IntegrityError and rollback any changes
+    # catch exception when if the same primary key already exists in the table and rollback any changes
     except sqlite3.IntegrityError:
         ebookstore.rollback()
 
@@ -203,6 +203,7 @@ def new_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
+    print(f"\n{PURPLE}{SEP * 10} [New Book Record] {SEP * 10}{RESET}\n")
     while True:
         try:
             id = int(input("Enter a new 4-digit id for the book: "))
@@ -274,6 +275,8 @@ def update_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
+    print(f"\n{PURPLE}{SEP * 10} [Update Book Record] {SEP * 10}{RESET}\n")
+
     # call check_id function
     id = check_id()
 
@@ -320,6 +323,8 @@ def delete_book():
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
 
+    print(f"\n{PURPLE}{SEP * 10} [Delete Book Record] {SEP * 10}{RESET}\n")
+
     id = check_id()
 
     cursor.execute('''DELETE FROM books WHERE id = ? ''', (id,))
@@ -345,6 +350,8 @@ def search_book():
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
+
+    print(f"\n{PURPLE}{SEP * 10} [Search Book Record] {SEP * 10}{RESET}\n")
 
     # call function to generate a valid id
     id = check_id()
