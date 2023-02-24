@@ -183,18 +183,15 @@ def new_book():
         id as a 4-digit integer
         title as a string
         author as a string
-        qty as an integer
+        qty as an integer (by calling new_qty function)
 
     If the user input for id is not a 4-digit integer, an error message will be displayed.
     If the id is already present in the database, the user will be prompted to enter a different id.
 
-    If the user input for qty is not an integer, the user will be prompted to enter a valid integer.
-
     The inputted information is then inserted into the 'books' table as a new row.
     Finally, the database connection will be closed.
 
-    Returns:
-        str: A string indicating the book was successfully added displaying record details.
+    A string will be displayed to the user indicating the book was successfully added displaying record details.
     """
 
     # connect to the 'ebookstore' database
@@ -262,11 +259,10 @@ def update_book():
         'Author' as TEXT,
         'Qty' as INTEGER.
 
-    The inputted information is then used to update the corresponding row in the 'books' table.
+    The inputted information is then used to update the corresponding record in the 'books' table.
     Finally, the database connection will be closed.
 
-    Returns:
-        str: A string indicating the id of the book was successfully updated showing the changes.
+    A string will be displayed to the user indicating the id of the book was successfully updated showing the changes.
     """
 
     # connect to the 'ebookstore' database
@@ -297,7 +293,7 @@ def update_book():
 
     # display new book record to user
     output = f"\n{PURPLE}{SEP * 10} [Updated Book Information] {SEP * 10}{RESET}\n"
-    output += f"ID:\t\t{id}\n"
+    output += f"ID:\t{id}\n"
     output += f"Title:\t{title}\n"
     output += f"Author:\t{author}\n"
     output += f"Qty:\t{qty}\n"
@@ -313,8 +309,7 @@ def delete_book():
     The book with the specified id is then deleted from the "books" table.
     The changes are committed and the connection to the database is closed.
 
-    Returns:
-        str: A string indicating the id of the book that was deleted from the database.
+    A string is displayed to the user indicating the id of the book that was deleted from the database.
     """
 
     # connect to the 'ebookstore' database
@@ -327,6 +322,7 @@ def delete_book():
 
     id = check_id()
 
+    # deleted record from table
     cursor.execute('''DELETE FROM books WHERE id = ? ''', (id,))
 
     # commit changes to books database
@@ -341,8 +337,7 @@ def delete_book():
 def search_book():
     """Search for a book in the ebookstore database by id.
 
-    Returns:
-        str: A string with the book's title, author, and quantity
+    A string is displayed to the user with the book's title, author, and quantity
     """
 
     # connect to the 'ebookstore' database
