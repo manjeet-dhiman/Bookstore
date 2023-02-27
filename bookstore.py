@@ -48,7 +48,7 @@ def create_table():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore")
+    ebookstore = sqlite3.connect("data/ebookstore.db")
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -80,7 +80,7 @@ def populate(book_list):
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore")
+    ebookstore = sqlite3.connect("data/ebookstore.db")
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -114,7 +114,7 @@ def check_id():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore")
+    ebookstore = sqlite3.connect("data/ebookstore.db")
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -191,11 +191,12 @@ def new_book():
     The inputted information is then inserted into the 'books' table as a new row.
     Finally, the database connection will be closed.
 
-    A string will be displayed to the user indicating the book was successfully added displaying record details.
+    Returns:
+    str: A string will be displayed to the user indicating the book was successfully added displaying record details.
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore")
+    ebookstore = sqlite3.connect("data/ebookstore.db")
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -248,7 +249,7 @@ def new_book():
     output += f"Author:\t{author}\n"
     output += f"Qty:\t{qty}\n"
 
-    print(output)
+    return output
 
 
 def update_book():
@@ -262,11 +263,12 @@ def update_book():
     The inputted information is then used to update the corresponding record in the 'books' table.
     Finally, the database connection will be closed.
 
-    A string will be displayed to the user indicating the id of the book was successfully updated showing the changes.
+    Returns:
+    str: A string will be displayed to the user indicating the id of the book was successfully updated showing the changes.
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore")
+    ebookstore = sqlite3.connect("data/ebookstore.db")
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -298,7 +300,7 @@ def update_book():
     output += f"Author:\t{author}\n"
     output += f"Qty:\t{qty}\n"
 
-    print(output)
+    return output
 
 
 def delete_book():
@@ -313,7 +315,7 @@ def delete_book():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore")
+    ebookstore = sqlite3.connect("data/ebookstore.db")
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -337,11 +339,12 @@ def delete_book():
 def search_book():
     """Search for a book in the ebookstore database by id.
 
-    A string is displayed to the user with the book's title, author, and quantity
+    Returns:
+    str: A string is displayed to the user with the book's title, author, and quantity
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore")
+    ebookstore = sqlite3.connect("data/ebookstore.db")
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -364,7 +367,7 @@ def search_book():
     output += f"Author:\t{book[1]}\n"
     output += f"Qty:\t{book[2]}\n"
 
-    print(output)
+    return output
 
 
 def main():
@@ -401,11 +404,11 @@ Please choose an option:
 : ''')
 
         if menu == '1':
-            new_book()
+            print(new_book())
             continue
 
         elif menu == '2':
-            update_book()
+            print(update_book())
             continue
 
         elif menu == '3':
@@ -413,7 +416,7 @@ Please choose an option:
             continue
 
         elif menu == '4':
-            search_book()
+            print(search_book())
             continue
 
         elif menu == '0':
@@ -428,3 +431,4 @@ Please choose an option:
 # call the program
 if __name__ == "__main__":
     main()
+    
