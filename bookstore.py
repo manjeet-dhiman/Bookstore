@@ -34,6 +34,11 @@ RESET = "\033[0m"
 SEP = "⎯"
 
 
+def connect_db():
+    """Connect to the 'ebookstore' database"""
+    return sqlite3.connect("data/ebookstore.db")
+
+
 def create_table():
     """Create a table named 'books' in the SQLite database 'ebookstore'
 
@@ -48,7 +53,7 @@ def create_table():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore.db")
+    ebookstore = connect_db()
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -80,7 +85,7 @@ def populate(book_list):
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore.db")
+    ebookstore = connect_db()
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -114,7 +119,7 @@ def check_id():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore.db")
+    ebookstore = connect_db()
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -196,7 +201,7 @@ def new_book():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore.db")
+    ebookstore = connect_db()
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -264,11 +269,11 @@ def update_book():
     Finally, the database connection will be closed.
 
     Returns:
-    str: A string will be displayed to the user indicating the id of the book was successfully updated showing the changes.
+    str: Displayed to the user indicating the id of the book was successfully updated showing the changes.
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore.db")
+    ebookstore = connect_db()
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -315,7 +320,7 @@ def delete_book():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore.db")
+    ebookstore = connect_db()
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -344,7 +349,7 @@ def search_book():
     """
 
     # connect to the 'ebookstore' database
-    ebookstore = sqlite3.connect("data/ebookstore.db")
+    ebookstore = connect_db()
 
     # create a cursor to execute SQL commands
     cursor = ebookstore.cursor()
@@ -431,4 +436,3 @@ Please choose an option:
 # call the program
 if __name__ == "__main__":
     main()
-    
